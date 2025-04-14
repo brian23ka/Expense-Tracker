@@ -36,6 +36,21 @@ const App = () => {
     setShowForm(!showForm);
   };
 
+  // Filter and sort expenses before passing to table
+  const filteredAndSortedExpenses = expenses
+    .filter((expense) =>
+      expense.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'category') {
+        return a.category.localeCompare(b.category);
+      } else if (sortBy === 'dueDate') {
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      } else {
+        return a.description.localeCompare(b.description);
+      }
+    });
+
   return (
     <div>
       <h1>Expense Tracker</h1>
@@ -51,10 +66,9 @@ const App = () => {
 
       {/* Expense table */}
       <ExpenseTable
-        expenses={expenses}
+        expenses={filteredAndSortedExpenses}
         onDelete={deleteExpense}
         onStatusChange={updateStatus}
-        searchTerm={searchTerm}
       />
 
       {/* Floating Action Button (FAB) */}
